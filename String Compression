@@ -1,0 +1,42 @@
+def solution(s):
+    answer = 1000
+    if len(s) == 1:
+        return 1
+
+    arr0 = []
+    for k in range(1, len(s) // 2 +1):
+        arr0.clear()
+        for i in range(0, len(s), k):
+            arr0.append(s[i:i + k])
+
+        compressed = ""
+        visit = [0 for _ in range(len(arr0))]
+        i = 0
+        while i < len(arr0):
+            tmp = arr0[i]
+            if visit[i] == 1:
+                i += 1
+                continue
+            visit[i] = 1
+
+            j = i + 1
+            cnt = 1
+            while j < len(arr0):
+                if arr0[j] == tmp:
+                    cnt += 1
+                    visit[j] = 1
+                    j += 1
+                else:
+                    break
+            if cnt != 1:
+                compressed = compressed + str(cnt) + tmp
+            else:
+                compressed = compressed + tmp
+            i += 1
+        answer = min(answer, len(compressed))
+
+    return answer
+
+
+a = solution("aabbaccc")
+print(a)
