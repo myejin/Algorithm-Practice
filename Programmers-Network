@@ -1,0 +1,26 @@
+n = 3
+computers = [[1, 1, 0], [1, 1, 1], [0, 1, 1]]
+
+def solution(n, computers):
+    stack = []
+    visit = [0 for _ in range(n)]
+    network = 0
+
+    while 0 in visit:
+        stack.append(visit.index(0))
+        
+        network += 1
+        while True: 
+            if len(stack) == 0: 
+                break
+            com = stack.pop()
+            visit[com] = 1
+
+            #for i in range(com + 1, n): 
+            for i in range(n):
+                if visit[i] == 0 and computers[com][i] == 1:
+                    stack.append(i)
+    return network
+
+s = solution(n, computers)
+print(s)
