@@ -1,0 +1,25 @@
+progresses = [93, 30, 55]
+speeds = [1, 30, 5]
+
+def solution(progresses, speeds):
+    answer = []
+    while progresses:
+        for i in range(len(progresses)):
+            progresses[i] += speeds[i]
+        # 하루에 speeds[i] 만큼 진도율(progresses[i])이 증가한다.
+
+        cnt = 0
+        while True:
+            if len(progresses) == 0:
+                break
+            if progresses[0] < 100:
+                break
+            else: # 진도율이 100 넘었으면 작업진행 리스트에서 제거한다.
+                progresses.pop(0)
+                speeds.pop(0)
+                cnt += 1 # 하루에 배포되는 양을 계산한다.
+        if cnt != 0:
+            answer.append(cnt)
+    return answer
+
+print(solution(progresses, speeds))
