@@ -1,0 +1,27 @@
+def BFS(words, target, visit, queue):
+    while True:
+        if len(queue) == 0:
+            return 0
+        word, level = queue.pop(0)
+
+        if word in words:
+            visit[words.index(word)] = 1
+
+        if word == target:
+            return level
+
+        for w in words:
+            for i in range(len(word)):
+                if word[:i] in w and word[i + 1:] in w:
+                    index = words.index(w)
+                    if visit[index] == 1:
+                        continue
+                    queue.append((w, level + 1))
+
+def solution(begin, target, words):
+    visit = [0 for _ in range(len(words))]
+    queue = [(begin, 0) ]
+    if target not in words:
+        return 0
+    answer = BFS(words, target, visit, queue)
+    return answer
