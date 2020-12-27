@@ -1,0 +1,23 @@
+clothes = [["yellow_hat", "headgear"], ["blue_sunglasses", "eyewear"], ["green_turban", "headgear"]]
+
+def solution(clothes):
+    #print('clothes :', clothes)
+    cloth_dict = dict()
+    for i in range(len(clothes)):
+        if clothes[i][1] in cloth_dict.keys():
+            cloth_dict[clothes[i][1]].append(clothes[i][0])
+        else:
+            cloth_dict[clothes[i][1]] = [clothes[i][0]]
+    #print('dict :', cloth_dict)
+
+    # 경우의 수 계산
+    keys = list(cloth_dict.keys())
+    count = 1
+    for key in keys:
+        count *= (len(cloth_dict.get(key)) + 1)
+    count -= 1  # 각 key에서 아무 옷도 선택하지 않은 경우
+
+    return count
+
+s = solution(clothes)
+print(s)
