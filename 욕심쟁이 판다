@@ -1,0 +1,30 @@
+n = int(input())
+forest = [[0] * n for _ in range(n)]
+order = []
+for i in range(n):
+    tmp = input().split()
+    for j in range(n):
+        forest[i][j] = int(tmp[j])
+        order.append([forest[i][j], i, j])
+order.sort(reverse=True)
+
+day = 1
+dp =  [[1] * n for _ in range(n)]
+for o in order:
+    value, i, j = o
+
+    dx = [1, -1, 0, 0]
+    dy = [0, 0, 1, -1]
+
+    for d in range(4):
+        x = i + dx[d]
+        y = j + dy[d]
+        if 0 <= x < n and 0 <= y < n:
+            if forest[x][y] > value:
+                dp[i][j] = max(dp[i][j], dp[x][y] + 1)
+
+max_ = 0
+for i in range(n):
+    for j in range(n):
+        max_ = max(max_, dp[i][j])
+print(max_)
