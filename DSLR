@@ -1,0 +1,38 @@
+from collections import deque
+def BFS(A, B, visit):
+    queue = deque([[A, ""]])
+
+    while True:
+        n, answer = queue.popleft()
+        if visit[n] == 1:
+            continue
+        visit[n] = 1
+
+        if n == B:
+            return answer
+
+        dn = (n * 2) % 10000
+        if visit[dn] == 0:
+            queue.append([dn, answer + 'D'])
+
+        if n == 0:
+            sn = 9999
+        else:
+            sn = n - 1
+        if visit[sn] == 0:
+            queue.append([sn, answer + 'S'])
+
+        ln = (n % 1000) * 10 + n // 1000
+        if visit[ln] == 0:
+            queue.append([ln, answer + 'L'])
+
+        rn = (n % 10) * 1000 + n // 10
+        if visit[rn] == 0:
+            queue.append([rn, answer + 'R'])
+
+
+T = int(input())
+for t in range(T):
+    A, B = map(int, input().split())
+    a = BFS(A, B, [0] * 10000)
+    print(a)
