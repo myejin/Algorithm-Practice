@@ -1,0 +1,45 @@
+N = int(input())
+vilage = [[0]*N for _ in range(N)]
+for i in range(N):
+    tmp = input()
+    for j in range(N):
+        vilage[i][j] = int(tmp[j])
+
+visit = [[0]*N for _ in range(N)]
+answer = []
+while True:
+    stack = []
+    for i in range(N):
+        for j in range(N):
+            if vilage[i][j] == 1 and visit[i][j] == 0:
+                stack.append([i, j])
+                break
+        if len(stack) == 1:
+            break
+
+    if len(stack) == 0:
+        break
+
+    count = 0
+    while True:
+        if len(stack) == 0:
+            answer.append(count)
+            break
+        i, j = stack.pop()
+        if visit[i][j] == 0:
+            count += 1
+            visit[i][j] = 1
+
+        dx = [-1, 1, 0, 0]
+        dy = [0, 0, -1, 1]
+        for d in range(4):
+            x = i + dx[d]
+            y = j + dy[d]
+            if 0 <= x < N and 0 <= y < N:
+                if vilage[x][y] == 1 and visit[x][y] == 0:
+                    stack.append([x, y])
+l = len(answer)
+print(l)
+answer.sort()
+for i in range(l):
+    print(answer[i])
