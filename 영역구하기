@@ -1,0 +1,46 @@
+M, N, K = map(int, input().split())
+paper = [[0] * M for _ in range(N)]
+for k in range(K):
+    x1, y1, x2, y2 = map(int, input().split())
+    for x in range(x1, x2):
+        for y in range(y1, y2):
+            paper[x][y] = 1
+
+visit = [[0] * M for _ in range(N)]
+answer = []
+while True:
+    stack = []
+    for i in range(N):
+        for j in range(M):
+            if paper[i][j] == 0 and visit[i][j] == 0:
+                stack.append([i, j])
+                break
+        if len(stack) == 1:
+            break
+    if len(stack) == 0:
+        break
+
+    count = 0
+    while True:
+        if len(stack) == 0:
+            answer.append(count)
+            break
+
+        i, j = stack.pop()
+        if visit[i][j] == 0:
+            visit[i][j] = 1
+            count += 1
+
+        dx = [-1, 1, 0, 0]
+        dy = [0, 0, -1, 1]
+        for d in range(4):
+            x = i + dx[d]
+            y = j + dy[d]
+            if 0 <= x < N and 0 <= y < M:
+                if paper[x][y] == 0 and visit[x][y] == 0:
+                    stack.append([x, y])
+answer.sort()
+l = len(answer)
+print(l)
+for i in range(l):
+    print(answer[i], end=' ')
