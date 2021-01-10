@@ -1,0 +1,65 @@
+from collections import deque
+
+def move(x, y, dx, dy):
+    cnt = 0
+    while True:
+        if board[x + dx][y + dy] == '#' or board[x][y] == 'O':
+            break # 다음 칸이 벽이거나 현재 칸이 구멍이면 다 기울인것
+        x += dx
+        y += dy
+        cnt += 1
+    return x, y, cnt
+
+N, M = map(int, input().split())
+board = [[0] * M for _ in range(N)]
+r1, r2, b1, b2 = 0, 0, 0, 0 # R과 B의 좌표를 저장하기 위함
+for n in range(N):
+    tmp = input()
+    for m in range(M):
+        board[n][m] = tmp[m]
+        if board[n][m] == 'R':
+            r1, r2 = n, m
+        if board[n][m] == 'B':
+            b1, b2 = n, m
+
+q = deque([[r1, r2, b1, b2, 0]]) # 0은 몇번 기울였는지 저장하는 level 값이다.
+visit = [[[[0] * M for _ in range(N)] for _ in range(M)] for _ in range(N)]
+# 4중 리스트, 방문여부를 체크해주지 않으면 Python3 에서 시간초과가 뜬다.
+
+while True:
+    if len(q) == 0:
+        break
+    r1, r2, b1, b2, level = q.popleft()
+    visit[r1][r2][b1][b2] = 1
+
+    if level > 10:
+        break # 10번까지만 보드를 기울인다. 그 이후엔 탐색을 중지한다.
+
+    if board[r1][r2] == 'O': # R이 구멍으로 빠져나올 때 답 출력 후 종료된다.
+        print(level)
+        exit() # 다른 경우일 때 -1 출력을 while문 밖으로 뺐기때문
+
+    dx = [-1, 1, 0, 0]
+    dy = [0, 0, -1, 1]
+    for d in range(4): # 상하좌우 이동
+        rx, ry, rcnt = move(r1, r2, dx[d], dy[d])
+        bx, by, bcnt = move(b1, b2, dx[d], dy[d])
+        # 한 번 기울일 때 여러 칸을 움직인다.
+        # 변수를 조금이라도 줄여보고자,, move함수를 따로 만들었다.
+
+        if board[bx][by] != 'O':
+        # B가 구멍으로 빠져나올 경우는 그냥 넘어간다.(continue)
+            if rx == bx and ry == by:
+            # 한칸에 R과 B가 동시에 들어갈 수 없다.
+                if rcnt > bcnt:
+                # 같은 칸으로 가기위해 R이 더많이 움직였다면 실제론 B에 막혀 갈수없다.
+                    rx -= dx[d]
+                    ry -= dy[d]
+                else:
+                    bx -= dx[d]
+                    by -= dy[d]
+
+            if visit[rx][ry][bx][by] == 0:
+                q.append([rx, ry, bx, by, level + 1])
+print(-1)
+# 10번 이내에 구멍으로 나왔을 경우를 제외하고 모두 -1을 출력한다.
