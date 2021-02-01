@@ -1,0 +1,22 @@
+dx = [0, 0, -1, 1]
+dy = [-1, 1, 0, 0]
+
+R, C = map(int, input().split())
+board = []
+for r in range(R):
+    board.append(list(input()))
+
+q = set([(0, 0, board[0][0])])  
+ans = 0
+while q:
+    r, c, alpha = q.pop() 
+    ans = max(ans, len(alpha))  
+
+    for d in range(4):
+        x = r + dx[d]
+        y = c + dy[d]
+        if 0 <= x < R and 0 <= y < C:
+            if board[x][y] in alpha:
+                continue
+            q.add((x, y, alpha + board[x][y]))
+print(ans)
