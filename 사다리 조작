@@ -1,0 +1,48 @@
+def check():
+    for n in range(1, N + 1):
+        start = n
+        for h in range(1, H+1):
+            if ladder[h][n - 1] == 1:
+                n -= 1
+            elif ladder[h][n] == 1:
+                n += 1
+
+        if start != n:
+            return False
+    return True
+
+
+def Manip(count, p):
+    global ans
+    if count == c:
+        if check():
+            ans = count
+        return
+
+    for h in range(p, H + 1):
+        for n in range(1, N):
+            if not ladder[h][n] + ladder[h][n - 1] + ladder[h][n + 1]:
+                ladder[h][n] = 1
+                Manip(count + 1, h)
+                ladder[h][n] = 0
+
+
+if __name__ == '__main__':
+    N, M, H = map(int, input().split())
+    ladder = [[0] * (N + 1) for _ in range(H + 1)]
+    if M == 0:
+        print(0)
+        exit()
+
+    for _ in range(M):
+        a, b = map(int, input().split())
+        ladder[a][b] = 1
+
+    ans = 10
+    for c in range(4):
+        Manip(0, 1)
+        if ans == c:
+            print(ans)
+            break
+    else:
+        print(-1)
