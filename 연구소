@@ -1,0 +1,62 @@
+from copy import deepcopy
+dx = [-1, 1, 0, 0]
+dy = [0, 0, -1, 1]
+
+N, M = map(int, input().split())
+lab = [[0] * M for _ in range(N)]
+safe = []  
+q = []  
+for n in range(N):
+    tmp = list(map(int, input().split()))
+    for m in range(M):
+        lab[n][m] = tmp[m]
+        if not lab[n][m]:  
+            safe.append([n, m])
+        if lab[n][m] == 2:  
+            q.append((n, m))
+
+
+def answer():
+    ans = 0
+    last = len(safe)
+    
+    for x in range(last):
+        n1, m1 = safe[x]
+        lab[n1][m1] = 1
+        for y in range(x+1, last):
+            n2, m2 = safe[y]
+            lab[n2][m2] = 1
+            for z in range(y+1, last):
+                n3, m3 = safe[z]
+                lab[n3][m3] = 1
+
+                ans = max(ans, bfs(lab, q))
+
+                lab[n3][m3] = 0
+            lab[n2][m2] = 0
+        lab[n1][m1] = 0
+    return ans
+
+
+def bfs(lab, q):
+    v_lab = deepcopy(lab)
+    q_ = set(q)
+    count = 0
+    while q_:  
+        n_, m_ = q_.pop()
+        v_lab[n_][m_] = 2
+
+        for d in range(4):
+            x = n_ + dx[d]
+            y = m_ + dy[d]
+            if 0 <= x < N and 0 <= y < M and not v_lab[x][y]:
+                q_.add((x, y))
+
+    for n_ in range(N): 
+        for m_ in range(M):
+            if not v_lab[n_][m_]:
+                count += 1
+    return count
+
+
+print(answer())
