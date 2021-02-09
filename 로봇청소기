@@ -1,0 +1,41 @@
+import sys
+input = sys.stdin.readline
+
+dx = [-1, 0, 1, 0]
+dy = [0, 1, 0, -1]
+
+N, M = map(int, input().split())
+r, c, d = map(int, input().split())
+areas = []
+for _ in range(N):
+    areas.append(list(map(int, input().split())))
+
+cnt = 0
+def simul1(r, c, d):
+    global cnt
+    if not areas[r][c]:
+        areas[r][c] = 2
+        cnt += 1
+
+    left_d = (d + 3) % 4
+    if not areas[r + dx[left_d]][c + dy[left_d]]:  
+        simul1(r + dx[left_d], c + dy[left_d], left_d)
+    else:
+        flag = True
+        for j in range(4):
+            x, y = r + dx[j], c + dy[j]
+            if not areas[x][y]:  
+                flag = False
+                break
+
+        if flag:
+            back = (d + 2) % 4
+            if areas[r + dx[back]][c + dy[back]] == 2: 
+                simul1(r + dx[back], c + dy[back], d)
+        else:
+            simul1(r, c, left_d)
+    return
+
+
+simul1(r, c, d)
+print(cnt)
