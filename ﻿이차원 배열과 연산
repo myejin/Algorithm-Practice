@@ -1,0 +1,50 @@
+import sys
+from copy import deepcopy
+from collections import Counter
+input = sys.stdin.readline
+
+r_size, c_size, time, A = 3, 3, 0, []
+
+def RC(s1, s2):
+    global A
+    newA = [[] for _ in range(s1)]
+    m = 0
+    for i in range(s1):
+        tmp = Counter(A[i])
+        del tmp[0]
+        tmp = list(tmp.items())
+        tmp.sort(key=lambda x: (x[1], x[0]))
+
+        for value, count in tmp:
+            newA[i].append(value)
+            newA[i].append(count)
+
+        m = max(m, len(newA[i]))
+
+    for i in range(s1):
+        if len(newA[i]) < m:
+            newA[i].extend([0]*(m-len(newA[i])))
+
+    A = deepcopy(newA)
+    return m
+
+
+r, c, k = map(int, input().split())
+for _ in range(3):
+    A.append(list(map(int, input().split())))
+
+while True:
+    if time > 100:
+        print(-1)
+        break
+    if r <= r_size and c <= c_size and A[r - 1][c - 1] == k:
+        print(time)
+        break
+
+    if r_size >= c_size:
+        c_size = RC(r_size, c_size)
+    else:
+        A = list(zip(*A))
+        r_size = RC(c_size, r_size)
+        A = list(zip(*A))
+    time += 1
