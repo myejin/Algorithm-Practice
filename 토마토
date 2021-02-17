@@ -1,0 +1,57 @@
+from collections import deque
+import sys
+input = sys.stdin.readline
+
+dx = [-1, 1, 0, 0, 0, 0]
+dy = [0, 0, 1, -1, 0, 0]
+dz = [0, 0, 0, 0, 1, -1]
+
+M, N, H = map(int, input().split())
+boxes = []
+for _ in range(H):
+    tmp = []
+    for i in range(N):
+        tmp.append(list(map(int, input().split())))
+    boxes.append(tmp)
+
+q = []
+flag = True
+for k in range(H):
+    for i in range(N):
+        for j in range(M):
+            if boxes[k][i][j] == 1: 
+                q.append([k, i, j, 0]) 
+        if flag and boxes[k][i].count(0):
+            flag = False
+
+if flag: 
+    print(0)
+    exit()
+
+level = 0
+q = deque(q)
+visit = [[[0]*M for _ in range(N)] for _ in range(H)]
+while q:
+    h, r, c, level = q.popleft()
+
+    for d in range(6):
+        z, x, y = h + dz[d], r + dx[d], c + dy[d]
+        if 0 <= z < H and 0 <= x < N and 0 <= y < M and not boxes[z][x][y] and not visit[z][x][y]:
+            q.append([z, x, y, level + 1])
+            boxes[z][x][y] = 1
+            visit[z][x][y] = 1
+
+
+flag = True
+for k in range(H):
+    for i in range(N):
+        if boxes[k][i].count(0):
+            flag = False 
+            break
+    if not flag:
+        break
+
+if flag:
+    print(level)
+else:
+    print(-1)
