@@ -1,0 +1,36 @@
+from itertools import combinations
+def solution(orders, course):
+    answer = []
+    count = [1] * 11
+    for c in course:
+        visit = {}
+        tmp = 1
+        for idx, order in enumerate(orders):
+            combination = combinations(order, c)
+            for combi in combination:
+                count[c] = 1
+                if combi in visit.keys():
+                    continue
+                for i in range(idx+1, len(orders)):
+                    flag = True
+                    for com in combi:
+                        if com not in orders[i]:
+                            flag = False
+                            break
+                    if flag:
+                        count[c] += 1
+                if count[c] == 1:
+                    continue
+                if count[c] > tmp:
+                    visit.clear()
+                    visit[combi] = count[c]
+                    tmp = count[c]
+                elif count[c] == tmp:
+                    visit[combi] = count[c]
+
+        for k in visit.keys():
+            ans = sorted(k)
+            answer.append(''.join(ans))
+
+    answer.sort()
+    return answer
